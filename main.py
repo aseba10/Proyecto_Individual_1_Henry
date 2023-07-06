@@ -4,10 +4,13 @@ import pandas as pd
 from fastapi import FastAPI
 import ast
 import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 
 df = pd.read_csv("Dataset/df.csv")
+df['genres'] = df['genres'].apply(lambda x: eval(x.strip()) if isinstance(x, str) else x)
 
 app = FastAPI()
 
@@ -95,5 +98,48 @@ def get_director(nombre_director):
         informacion_peliculas.append(pelicula)
 
     return promedio_retorno, informacion_peliculas
+
+@app.get("/get_recomendacion/{titulo}")
+def recomendacion(titulo): 
+
+    i = df[df["title"] == titulo].index[0]
+    lista_objetivo = df['genres'][i]
+    id_pelicula_referencia = df["id"][i]
+
+    filtro = df['genres'].apply(lambda x: isinstance(x, list) and set(x) == set(lista_objetivo))
+    df_filtrado = df[filtro]
+    df_filtrado = df_filtrado.reset_index(drop=True)
+
+    vectorizador = TfidfVectorizer()
+    
+    vectorizador.fit(df_filtrado["title"])
+    
+    caracteristicas_tfidf = vectorizador.transform(df_filtrado["title"])
+    
+    similitud = cosine_similarity(caracteristicas_tfidf)
+    
+    indice_pelicula_referencia = df_filtrado[df_filtrado['id'] == id_pelicula_referencia].index[0]
+    
+    similitudes_pelicula_referencia = similitud[indice_pelicula_referencia]
+    
+    indices_peliculas_similares = similitudes_pelicula_referencia.argsort()[::-1]
+    
+    recomendaciones = indices_peliculas_similares[1:6]  
+
+    lista_recomendaciones = []
+    title_recomendaciones = []
+
+    for indice_recomendacion in recomendaciones:
+        
+        lista_recomendaciones.append(df_filtrado["id"].iloc[indice_recomendacion])
+        title_recomendaciones.append(df_filtrado["title"].iloc[indice_recomendacion])
+    
+    title_recomendaciones = sorted(title_recomendaciones, reverse=True)
+
+    return title_recomendaciones
+
+
+
+
 
 
