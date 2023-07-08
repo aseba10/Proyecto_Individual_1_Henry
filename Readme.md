@@ -103,7 +103,7 @@ Para el sistema de recomendacion el modelo primero filtra el dataframe dejando s
 
 ## **Fuente de datos**
 
-- + [Dataset](https://drive.google.com/drive/folders/1nvSjC2JWUH48o3pb8xlKofi8SNHuNWeu)
++ [Dataset](https://drive.google.com/drive/folders/1nvSjC2JWUH48o3pb8xlKofi8SNHuNWeu)
 + [Diccionario de datos](https://docs.google.com/spreadsheets/d/1QkHH5er-74Bpk122tJxy_0D49pJMIwKLurByOfmxzho/edit#gid=0)
 <br/>
 
