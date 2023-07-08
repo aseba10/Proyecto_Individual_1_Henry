@@ -97,7 +97,7 @@ Para el sistema de recomendacion el modelo primero filtra el dataframe dejando s
 
 
 
-## **[Link Video]**
+## **[Link Video](https://drive.google.com/file/d/1YRLAmOh1J2uiREE0CvGzcY7uyV5mSWUH/view)**
 
 
 
